@@ -6,12 +6,12 @@ class Grid extends Component {
     super(props);
 
     this.state = {
-      cellNumber: [...Array(16)].map(_ => 0)
+      cellNumber: [...Array(4)].map(_ => [...Array(4)].map(_ => 0)),
     }
   }
 
   handleColor = (value) => {
-    return value <= 4 ? '#776e65' : 'white';
+    return value <= 4 ? '#776e65' : '#fff';
   };
 
   handleBackgroundColor = (value) => {
@@ -43,26 +43,28 @@ class Grid extends Component {
       case 8192:
         return '#93c';
       default:
-        return 'black';
+        return '#000';
     }
   };
 
   render() {
     console.log(this.state.cellNumber)
-
     return (
-      <div className={styles.board}>
-        {this.state.cellNumber.map((value, index) =>
-          <div key={index} className={styles.cell}
-               style={{ 'top': `${20 + 120 * parseInt(index / 4)}px`, 'left': `${20 + 120 * (index % 4)}px` }}/>
+      <div className={styles.board}>{
+        this.state.cellNumber.map((valueArray, indexArray) =>
+          valueArray.map((value, index) => (
+              <div key={index} className={styles.cell}
+                   style={{ 'top': `${20 + 120 * parseInt(index / 4)}px`, 'left': `${20 + 120 * (indexArray % 4)}px` }} />
+            )
+          )
         )}
         {
           this.state.cellNumber.map((value, index) =>
             <div key={value} className={styles.cellNumber} style={
               0 === value
                 ? {
-                  // 'width': '0',0
-                  // 'height': '0',
+                  'width': '0',
+                  'height': '0',
                   'top': `${20 + 120 * parseInt(index / 4)}px`,
                   'left': `${55 + 120 * (index % 4)}px`,
                 }
