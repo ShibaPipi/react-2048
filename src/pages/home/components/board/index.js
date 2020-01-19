@@ -1,13 +1,52 @@
 import React, { Component } from 'react';
 import styles from './index.less';
 
-class Grid extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      cellNumber: [...Array(4)].map(_ => [...Array(4)].map(_ => 0)),
-    }
+class Board extends Component {
+  render() {
+    const { cellNumber } = this.props;
+    // console.log(cellNumber)
+    return (
+      <div className={styles.board}>
+        {
+          cellNumber.map((valueArray, y) =>
+            valueArray.map((value, x) => (
+                <div key={x} className={styles.cell}
+                     style={{ 'top': `${20 + 120 * y}px`, 'left': `${20 + 120 * x}px` }} />
+              )
+            )
+          )
+        }
+        {
+          cellNumber.map((valueArray, y) => (
+              valueArray.map((value, x) => (
+                  <div key={x} className={styles.cellNumber}
+                       style={
+                         0 === value
+                           ? {
+                             'width': '0',
+                             'height': '0',
+                             'top': `${20 + 120 * y}px`,
+                             'left': `${55 + 120 * x}px`,
+                             'display': 'none'
+                           }
+                           : {
+                             'width': '100px',
+                             'height': '100px',
+                             'top': `${20 + 120 * y}px`,
+                             'left': `${20 + 120 * x}px`,
+                             'color': this.handleColor(value),
+                             'backgroundColor': this.handleBackgroundColor(value)
+                           }
+                       }>
+                    {value}
+                  </div>
+                )
+              )
+            )
+          )
+        }
+      </div>
+    )
   }
 
   handleColor = (value) => {
@@ -46,42 +85,7 @@ class Grid extends Component {
         return '#000';
     }
   };
-
-  render() {
-    console.log(this.state.cellNumber)
-    return (
-      <div className={styles.board}>{
-        this.state.cellNumber.map((valueArray, indexArray) =>
-          valueArray.map((value, index) => (
-              <div key={index} className={styles.cell}
-                   style={{ 'top': `${20 + 120 * parseInt(index / 4)}px`, 'left': `${20 + 120 * (indexArray % 4)}px` }} />
-            )
-          )
-        )}
-        {
-          this.state.cellNumber.map((value, index) =>
-            <div key={value} className={styles.cellNumber} style={
-              0 === value
-                ? {
-                  'width': '0',
-                  'height': '0',
-                  'top': `${20 + 120 * parseInt(index / 4)}px`,
-                  'left': `${55 + 120 * (index % 4)}px`,
-                }
-                : {
-                  'width': '100px',
-                  'height': '100px',
-                  'top': `${20 + 120 * parseInt(index / 4)}px`,
-                  'left': `${20 + 120 * (index % 4)}px`,
-                  'color': this.handleColor(value),
-                  'background-color': this.handleBackgroundColor(value)
-                }
-            }>{value}</div>
-          )
-        }
-      </div>
-    );
-  }
 }
 
-export default Grid;
+
+export default Board;

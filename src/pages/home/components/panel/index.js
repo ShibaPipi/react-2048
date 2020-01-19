@@ -1,14 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
 import styles from './index.less';
 
-function Header() {
-  return (
-    <div className={styles.panel}>
-      <h1>2048</h1>
-      <button className={styles.newGame}>new game</button>
-      <p>score: 0</p>
-    </div>
-  );
+class Panel extends Component {
+  render() {
+    const { score, newGame } = this.props;
+
+    return (
+      <div className={styles.panel}>
+        <h1>2048</h1>
+        <button className={styles.newGame} onClick={newGame}>new game</button>
+        <p>score: {score}</p>
+      </div>
+    );
+  }
 }
 
-export default Header;
+export default Panel;
