@@ -10,8 +10,11 @@ class Board extends Component {
         {
           cellNumber.map((valueArray, y) =>
             valueArray.map((value, x) => (
-                <div key={x} className={styles.cell}
-                     style={{ 'top': `${20 + 120 * y}px`, 'left': `${20 + 120 * x}px` }} />
+                <div
+                  key={x}
+                  className={styles.cell}
+                  style={{ 'top': `${20 + 120 * y}px`, 'left': `${20 + 120 * x}px` }}
+                />
               )
             )
           )
@@ -86,6 +89,5 @@ class Board extends Component {
     }
   };
 }
-
 
 export default Board;
