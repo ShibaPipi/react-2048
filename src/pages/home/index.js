@@ -85,14 +85,12 @@ class Home extends Component {
   handleMoveDown = () => {
   };
 
-  canMoveLeft = () => {
-    const { cellNumber } = this.state;
-    return cellNumber.some((valueArray, y) => {
-      return valueArray.some((value, x) => {
-        return y > 0 && 0 !== value && (0 === valueArray[x - 1] || valueArray[x - 1] === valueArray[x]);
-      });
-    })
-  };
+  canMoveLeft = () =>
+    this.state.cellNumber.some((valueArray) =>
+      valueArray.some((value, x) =>
+        x > 0 && 0 !== value && (0 === valueArray[x - 1] || valueArray[x - 1] === valueArray[x])
+      )
+    );
 
   canMoveUp = () => {
   };
@@ -116,7 +114,6 @@ class Home extends Component {
         this.randomNumber();
         this.randomNumber();
       });
-
 
   resetBoard = () => {
     this.setState({
