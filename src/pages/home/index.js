@@ -30,13 +30,80 @@ class Home extends Component {
 
   componentDidMount() {
     this.newGame();
+    document.addEventListener('keydown', this.onKeyDown);
   }
 
-  newGame = () => {
-    this.resetBoard();
-    this.randomNumber();
-    this.randomNumber();
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this.onKeyDown);
+  }
+
+  onKeyDown = (event) => {
+    switch (event.keyCode) {
+      case 37: // left
+        console.log('left');
+        if (this.handleMoveLeft()) {
+        }
+        this.handleGameOver();
+        break;
+      case 38: // up
+        console.log('up');
+        if (this.handleMoveUp()) {
+        }
+        this.handleGameOver();
+        break;
+      case 39: // right
+        console.log('right');
+        if (this.handleMoveRight()) {
+        }
+        this.handleGameOver();
+        break;
+      case 40: // down
+        console.log('down');
+        if (this.handleMoveDown()) {
+        }
+        this.handleGameOver();
+        break;
+      default:
+        break;
+    }
   };
+
+  handleMoveLeft = () => {
+
+  }
+
+  handleMoveUp = () => {
+  }
+
+  handleMoveRight = () => {
+  }
+
+  handleMoveDown = () => {
+  }
+
+  canMoveLeft = () => {
+  }
+  canMoveUp = () => {
+  }
+  canMoveRight = () => {
+  }
+  canMoveDown = () => {
+  }
+
+  handleGameOver = () => {
+  }
+
+  newGame = () =>
+    Promise
+      .resolve()
+      .then(() =>
+        this.resetBoard()
+      )
+      .then(() => {
+        this.randomNumber();
+        this.randomNumber();
+      });
+
 
   resetBoard = () => {
     this.setState({
@@ -47,34 +114,32 @@ class Home extends Component {
   };
 
   randomNumber = () => {
-    if (this.hasSpace()) {
-      const { cellNumber } = this.state;
-      let newCellNumber = cellNumber;
-      // console.log(cellNumber)
-      // console.log(this.state.cellNumber)
-      // 随机一个位置
-      let x = this.randomCoordinate();
-      let y = this.randomCoordinate();
-
-      while (true) {
-        if (0 === newCellNumber[x][y]) {
-          break;
-        }
-
-        x = this.randomCoordinate();
-        y = this.randomCoordinate();
-      }
-      // 随机一个数字，并显示这个数字
-      newCellNumber[x][y] = Math.random() > 0.5 ? 2 : 4;
-
-      this.setState({
-        cellNumber: newCellNumber
-      });
-
-      this.showNumber();
-    } else {
-      console.log('no space')
+    if (!this.hasSpace()) {
+      return false;
     }
+
+    const { cellNumber } = this.state;
+    let newCellNumber = cellNumber;
+    // 随机一个位置
+    let x = this.randomCoordinate();
+    let y = this.randomCoordinate();
+
+    while (true) {
+      if (0 === newCellNumber[x][y]) {
+        break;
+      }
+
+      x = this.randomCoordinate();
+      y = this.randomCoordinate();
+    }
+    // 随机一个数字，并显示这个数字
+    newCellNumber[x][y] = Math.random() > 0.5 ? 2 : 4;
+
+    this.setState({
+      cellNumber: newCellNumber
+    });
+
+    this.showNumber();
   };
 
   showNumber = () => {
