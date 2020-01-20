@@ -40,8 +40,8 @@ class Home extends Component {
   onKeyDown = (event) => {
     switch (event.keyCode) {
       case 37: // left
-        console.log('left');
         if (this.handleMoveLeft()) {
+          console.log('can left');
         }
         this.handleGameOver();
         break;
@@ -69,29 +69,42 @@ class Home extends Component {
   };
 
   handleMoveLeft = () => {
+    if (!this.canMoveLeft()) {
+      return false;
+    }
 
-  }
+    return true;
+  };
 
   handleMoveUp = () => {
-  }
+  };
 
   handleMoveRight = () => {
-  }
+  };
 
   handleMoveDown = () => {
-  }
+  };
 
   canMoveLeft = () => {
-  }
+    const { cellNumber } = this.state;
+    return cellNumber.some((valueArray, y) => {
+      return valueArray.some((value, x) => {
+        return y > 0 && 0 !== value && (0 === valueArray[x - 1] || valueArray[x - 1] === valueArray[x]);
+      });
+    })
+  };
+
   canMoveUp = () => {
-  }
+  };
+
   canMoveRight = () => {
-  }
+  };
+
   canMoveDown = () => {
-  }
+  };
 
   handleGameOver = () => {
-  }
+  };
 
   newGame = () =>
     Promise
@@ -118,14 +131,13 @@ class Home extends Component {
       return false;
     }
 
-    const { cellNumber } = this.state;
-    let newCellNumber = cellNumber;
+    let { cellNumber } = this.state;
     // 随机一个位置
     let x = this.randomCoordinate();
     let y = this.randomCoordinate();
 
     while (true) {
-      if (0 === newCellNumber[x][y]) {
+      if (0 === cellNumber[x][y]) {
         break;
       }
 
@@ -133,24 +145,14 @@ class Home extends Component {
       y = this.randomCoordinate();
     }
     // 随机一个数字，并显示这个数字
-    newCellNumber[x][y] = Math.random() > 0.5 ? 2 : 4;
+    cellNumber[x][y] = Math.random() > 0.5 ? 2 : 4;
 
     this.setState({
-      cellNumber: newCellNumber
+      cellNumber
     });
-
-    this.showNumber();
   };
 
-  showNumber = () => {
-
-  };
-
-  hasSpace = () => {
-    const { cellNumber } = this.state;
-
-    return cellNumber.some(valueArray => valueArray.some(value => 0 === value))
-  };
+  hasSpace = () => this.state.cellNumber.some(valueArray => valueArray.some(value => 0 === value));
 
   randomCoordinate = () => parseInt(Math.floor(Math.random() * 4));
 
