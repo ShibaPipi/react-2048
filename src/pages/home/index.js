@@ -106,7 +106,7 @@ class Home extends Component {
   canMoveLeft = () =>
     this.state.cellNumber.some(valueArray =>
       valueArray.some((value, x) =>
-        x > 0
+        0 !== x
         && 0 !== value
         && (0 === valueArray[x - 1] || valueArray[x - 1] === valueArray[x])
       )
@@ -114,8 +114,8 @@ class Home extends Component {
 
   canMoveUp = () =>
     this.state.cellNumber.some((valueArray, y) =>
-      valueArray.some((value, x) =>
-        y > 0
+      valueArray.some(value =>
+        0 !== y
         && 0 !== value
         && (0 === valueArray[y - 1] || valueArray[y - 1] === valueArray[y])
       )
@@ -129,7 +129,7 @@ class Home extends Component {
 
   canGoThrough = (y, m, x) => {
     const { cellNumber } = this.state;
-    for (let i = m + 1; i < x; i++) {
+    for (let i = m; i < x; i++) {
       if (0 !== cellNumber[y][i]) {
         return false;
       }
