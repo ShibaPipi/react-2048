@@ -41,29 +41,31 @@ class Home extends Component {
     switch (event.keyCode) {
       case 37: // left
         this.canMoveLeft()
-        && Promise.resolve()
-          .then(() =>
-            this.handleMoveLeft()
-          )
-          .then(() =>
-            this.randomNumber()
-          );
+        &&
+        Promise.resolve()
+          .then(() => this.handleMoveLeft())
+          .then(() => this.randomNumber());
         break;
       case 38: // up
-        this.canMoveUp();
-        console.log('up');
-        if (this.handleMoveUp()) {
-        }
+        this.canMoveUp()
+        &&
+        Promise.resolve()
+          .then(() => this.handleMoveUp())
+          .then(() => this.randomNumber());
         break;
       case 39: // right
-        console.log('right');
-        if (this.handleMoveRight()) {
-        }
+        this.canMoveRight()
+        &&
+        Promise.resolve()
+          .then(() => this.handleMoveRight())
+          .then(() => this.randomNumber());
         break;
       case 40: // down
-        console.log('down');
-        if (this.handleMoveDown()) {
-        }
+        this.canMoveDown()
+        &&
+        Promise.resolve()
+          .then(() => this.handleMoveDown())
+          .then(() => this.randomNumber());
         break;
       default:
         return;
@@ -78,10 +80,10 @@ class Home extends Component {
       for (let x = 1; x < 4; x++) {
         if (0 !== cellNumber[y][x]) {
           for (let m = 0; m < x; m++) {
-            if (0 === cellNumber[y][m] && this.canGoThrough(y, m, x)) {
+            if (0 === cellNumber[y][m] && this.canThroughLeft(y, m, x)) {
               cellNumber[y][m] = cellNumber[y][x];
               cellNumber[y][x] = 0;
-            } else if (cellNumber[y][m] === cellNumber[y][x] && this.canGoThrough()) {
+            } else if (cellNumber[y][m] === cellNumber[y][x] && this.canThroughLeft(y, m, x)) {
               cellNumber[y][m] += cellNumber[y][x];
               cellNumber[y][x] = 0;
             }
@@ -91,46 +93,176 @@ class Home extends Component {
     }
     this.setState({
       cellNumber
-    })
+    });
   };
 
   handleMoveUp = () => {
+    let { cellNumber } = this.state;
+
+    for (let y = 1; y < 4; y++) {
+      for (let x = 0; x < 4; x++) {
+        if (0 !== cellNumber[y][x]) {
+          for (let n = 0; n < y; n++) {
+            if (0 === cellNumber[n][x] && this.canThroughUp(x, n, y)) {
+              cellNumber[n][x] = cellNumber[y][x];
+              cellNumber[y][x] = 0;
+            } else if (cellNumber[n][x] === cellNumber[y][x] && this.canThroughUp(x, n, y)) {
+              cellNumber[n][x] += cellNumber[y][x];
+              cellNumber[y][x] = 0;
+            }
+          }
+        }
+      }
+    }
+    this.setState({
+      cellNumber
+    });
   };
 
   handleMoveRight = () => {
+    let { cellNumber } = this.state;
+
+    for (let y = 0; y < 4; y++) {
+      for (let x = 2; x >= 0; x--) {
+        if (0 !== cellNumber[y][x]) {
+          for (let m = 3; m > x; m--) {
+            if (0 === cellNumber[y][m] && this.canThroughRight(y, m, x)) {
+              cellNumber[y][m] = cellNumber[y][x];
+              cellNumber[y][x] = 0;
+            } else if (cellNumber[y][m] === cellNumber[y][x] && this.canThroughRight(y, m, x)) {
+              cellNumber[y][m] += cellNumber[y][x];
+              cellNumber[y][x] = 0;
+            }
+          }
+        }
+      }
+    }
+    this.setState({
+      cellNumber
+    });
   };
 
   handleMoveDown = () => {
+    let { cellNumber } = this.state;
+
+    for (let y = 2; y >= 0; y--) {
+      for (let x = 0; x < 4; x++) {
+        if (0 !== cellNumber[y][x]) {
+          for (let n = 3; n > y; n--) {
+            if (0 === cellNumber[n][x] && this.canThroughDown(x, n, y)) {
+              cellNumber[n][x] = cellNumber[y][x];
+              cellNumber[y][x] = 0;
+            } else if (cellNumber[n][x] === cellNumber[y][x] && this.canThroughDown(x, n, y)) {
+              cellNumber[n][x] += cellNumber[y][x];
+              cellNumber[y][x] = 0;
+            }
+          }
+        }
+      }
+    }
+    this.setState({
+      cellNumber
+    });
   };
 
   canMoveLeft = () =>
     this.state.cellNumber.some(valueArray =>
       valueArray.some((value, x) =>
         0 !== x
-        && 0 !== value
-        && (0 === valueArray[x - 1] || valueArray[x - 1] === valueArray[x])
+        &&
+        0 !== value
+        &&
+        (0 === valueArray[x - 1] || valueArray[x - 1] === valueArray[x])
       )
     );
 
-  canMoveUp = () =>
-    this.state.cellNumber.some((valueArray, y) =>
-      valueArray.some(value =>
-        0 !== y
-        && 0 !== value
-        && (0 === valueArray[y - 1] || valueArray[y - 1] === valueArray[y])
-      )
-    );
+  canMoveUp = () => {
+    const { cellNumber } = this.state;
 
-  canMoveRight = () => {
+    for (let x = 0; x < 4; x++) {
+      for (let y = 1; y < 4; y++) {
+        if (
+          0 !== cellNumber[y][x]
+          &&
+          (0 === cellNumber[y - 1][x] || cellNumber[y - 1][x] === cellNumber[y][x])
+        ) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   };
+
+  canMoveRight = () =>
+    this.state.cellNumber.some(valueArray =>
+      valueArray.some((value, x) =>
+        3 !== x
+        &&
+        0 !== value
+        &&
+        (0 === valueArray[x + 1] || valueArray[x + 1] === valueArray[x])
+      )
+    );
 
   canMoveDown = () => {
+    const { cellNumber } = this.state;
+
+    for (let y = 2; y >= 0; y--) {
+      for (let x = 0; x < 4; x++) {
+        if (
+          0 !== cellNumber[y][x]
+          &&
+          (0 === cellNumber[y + 1][x] || cellNumber[y + 1][x] === cellNumber[y][x])
+        ) {
+          return true;
+        }
+      }
+    }
+
+    return false;
   };
 
-  canGoThrough = (y, m, x) => {
+  canThroughLeft = (y, m, x) => {
     const { cellNumber } = this.state;
-    for (let i = m; i < x; i++) {
+
+    for (let i = m + 1; i < x; i++) {
       if (0 !== cellNumber[y][i]) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  canThroughUp = (x, n, y) => {
+    const { cellNumber } = this.state;
+
+    for (let j = n + 1; j < y; j++) {
+      if (0 !== cellNumber[x][j]) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  canThroughRight = (y, m, x) => {
+    const { cellNumber } = this.state;
+
+    for (let i = m + 1; i < x; i++) {
+      if (0 !== cellNumber[y][i]) {
+        return false;
+      }
+    }
+
+    return true;
+  };
+
+  canThroughDown = (x, n, y) => {
+    const { cellNumber } = this.state;
+    for (let j = n + 1; j < y; j++) {
+      if (0 !== cellNumber[x][j]) {
         return false;
       }
     }
@@ -144,9 +276,7 @@ class Home extends Component {
   newGame = () =>
     Promise
       .resolve()
-      .then(() =>
-        this.resetBoard()
-      )
+      .then(() => this.resetBoard())
       .then(() => {
         this.randomNumber();
         this.randomNumber();
@@ -154,19 +284,14 @@ class Home extends Component {
 
   resetBoard = () => {
     // let prevData = [
-    //   [2, 2, 0, 2],
-    //   [0, 2, 0, 2],
-    //   [2, 2, 2, 2],
-    //   [0, 2, 0, 2]
-    // ];
-    // let nextData = [
-    //   [4, 2, 0, 0],
-    //   [4, 0, 0, 0],
-    //   [4, 4, 0, 0],
-    //   [4, 0, 0, 0]
+    //   [2, 0, 4, 0],
+    //   [0, 0, 0, 0],
+    //   [0, 0, 0, 0],
+    //   [0, 0, 0, 0]
     // ];
     this.setState({
       score: 0,
+      // cellNumber: prevData
       cellNumber: this.initialize2DArray(4, 4)
     });
   };
@@ -199,18 +324,13 @@ class Home extends Component {
 
   hasSpace = () =>
     this.state.cellNumber.some(valueArray =>
-      valueArray.some(value =>
-        0 === value
-      )
+      valueArray.some(value => 0 === value)
     );
 
-  randomCoordinate = () =>
-    parseInt(Math.floor(Math.random() * 4));
+  randomCoordinate = () => parseInt(Math.floor(Math.random() * 4));
 
   initialize2DArray = (x, y, value = 0) =>
-    Array(y).fill().map(() =>
-      Array(x).fill(value)
-    );
+    Array(y).fill().map(() => Array(x).fill(value));
 }
 
 export default Home;
