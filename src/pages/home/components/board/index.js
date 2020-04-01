@@ -2,6 +2,13 @@ import React, { Component } from 'react';
 import styles from './index.less';
 
 class Board extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      show: true
+    }
+  }
+
   render() {
     const { cellNumber } = this.props;
     // console.log(cellNumber)
